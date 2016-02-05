@@ -6,12 +6,141 @@
 
 #pragma once
 
-namespace mids
+class mids_type
 {
-	
+public:
+
+	// total size of mid vector
+	static const uint mids_size=0;
 
 	
 
-	// total size of mids vector
-	const int intermediate_size=0;
+	
+
+	typedef arma::vec::fixed<mids_size> vector_type;
+	typedef arma::subview_col<double> subvector_type;
+	vector_type data;
+
+	mids_type()
+	{}
+
+	mids_type(vector_type data): data(data)
+	{}
+
+	inline const vector_type operator() () const
+	{
+		return data;
+	}
+	inline vector_type operator() ()
+	{
+		return data;
+	}
+
+	inline double operator() (const arma::uword n) const
+	{
+		return data(n);
+	}
+	inline double& operator() (const arma::uword n)
+	{
+		return data(n);
+	}
+
+	inline const subvector_type subvec(const arma::uword n,const arma::uword m) const
+	{
+		return data.subvec(n,m);
+	}
+	inline subvector_type subvec(const arma::uword n,const arma::uword m)
+	{
+		return data.subvec(n,m);
+	}
+
+	mids_type operator= (const mids_type other)
+	{
+		data=other.data;
+		return *this;
+	}
+
+	mids_type operator= (const vector_type other_data)
+	{
+		data=other_data;
+		return *this;
+	}
+
+	inline vector_type zeros()
+	{
+		return data.zeros();
+	}
+
+	// inline const vector_type operator*= (const double val)
+	// {
+	// 	return (data=val*data);
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return data*val;
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return val*data;
+	// }
+
+	// ****************************
+	// total size of mid vector
+
+	
+};
+
+inline mids_type::vector_type operator* (double scalar, mids_type vec)
+{
+	return scalar * vec.data;
+}
+
+inline mids_type::vector_type operator* (mids_type vec,double scalar)
+{
+	return vec.data * scalar;
+}
+
+inline mids_type::vector_type operator+ (double scalar, mids_type vec)
+{
+	return scalar + vec.data;
+}
+
+inline mids_type::vector_type operator+ (mids_type vec,double scalar)
+{
+	return vec.data + scalar;
+}
+
+inline mids_type::vector_type operator+ (mids_type vec1,mids_type vec2)
+{
+	return vec1.data + vec2.data;
+}
+
+inline mids_type::vector_type operator- (double scalar, mids_type vec)
+{
+	return scalar - vec.data;
+}
+
+inline mids_type::vector_type operator- (mids_type vec,double scalar)
+{
+	return vec.data - scalar;
+}
+
+inline mids_type::vector_type operator- (mids_type vec1,mids_type vec2)
+{
+	return vec1.data - vec2.data;
+}
+
+namespace arma
+{
+	inline mids_type::vector_type abs(mids_type vec)
+	{
+		return arma::abs(vec.data);
+	}
+
+	inline double max(mids_type vec)
+	{
+		return arma::max(vec.data);
+	}
 }

@@ -8,7 +8,7 @@
 
 namespace outputs
 {
-	const std::string output_header[]={
+	std::string output_header[]={
 		"surge_input_acc_ref",
 		"surge_hp_out",
 		"surge_kin_acc",
@@ -34,11 +34,13 @@ namespace outputs
 	const uint surge_lp_out=5;
 	const uint specific_force=6;
 
-	// total size of outputs vector
-	const int output_size=7;
+	// ****************************
+	// total size of output vector
+
+	const int outputs_size=7;
 	
 	//Export list
-	struct FigureList
+	const struct FigureList
 	{
 		std::string file_suffix; // no space is accepted in file suffix name
 		int output_index;
@@ -46,4 +48,4 @@ namespace outputs
 		{"surge_input_acc_ref",outputs::surge_input_acc_ref},
 		{"specific_force",outputs::specific_force}
 	};
-}
+};

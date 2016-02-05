@@ -74,7 +74,7 @@ public:
 			if(array_size==1)
 			{
 				ret+=(line_number?easytext::newline:"");
-				ret+="ymat(outputs::"+name+")=mid(mids::"+name+");";
+				ret+="ymat(outputs::"+name+")=mid(mid.index_"+name+");";
 				line_number++;
 			}
 			else
@@ -91,7 +91,7 @@ public:
 				if(cover_all_range)
 				{
 					ret+=(line_number?easytext::newline:"");
-					ret+="ymat.subvec(outputs::"+name+"_0,outputs::"+name+"_"+easytext::to_string(array_size-1)+")=mid.subvec(mids::"+name+"_0,mids::"+name+"_end);";
+					ret+="ymat.subvec(outputs::"+name+"_0,outputs::"+name+"_"+easytext::to_string(array_size-1)+")=mid.subvec(mid.index_"+name+"_0,mid.index_"+name+"_end);";
 					line_number++;
 				}
 				else
@@ -101,9 +101,9 @@ public:
 						ret+=(line_number?easytext::newline:"");
 						bool k_is_explicit= (k==0) || ( std::find(explicit_indices.begin(), explicit_indices.end(), k)!=explicit_indices.end() );
 						if(k_is_explicit)
-							ret+="ymat(outputs::"+name+"_"+easytext::to_string(k)+")=mid(mids::"+name+"_"+easytext::to_string(k)+");";
+							ret+="ymat(outputs::"+name+"_"+easytext::to_string(k)+")=mid(mid.index_"+name+"_"+easytext::to_string(k)+");";
 						else
-							ret+="ymat(outputs::"+name+"_"+easytext::to_string(k)+")=mid(mids::"+name+"_0+"+easytext::to_string(k)+");";
+							ret+="ymat(outputs::"+name+"_"+easytext::to_string(k)+")=mid(mid.index_"+name+"_0+"+easytext::to_string(k)+");";
 						line_number++;
 					}
 				}
@@ -111,7 +111,6 @@ public:
 		}
 		return ret;
 	}
-
 
 	// sample:
 	// x_dot(states::surge_hp_x1)=...
@@ -174,7 +173,7 @@ public:
 	std::string to_index_constants_definitions(uint &start_index)
 	{
 		std::string ret;
-		const std::string type_text="const uint ";
+		const std::string type_text="const uint index_";
 		if(array_size==1)
 		{
 			ret+=type_text+name+"="+easytext::to_string(start_index)+";";
@@ -189,6 +188,34 @@ public:
 					ret+=type_text+name+"_"+easytext::to_string(explicit_index)+"="+easytext::to_string(start_index+explicit_index)+";"+easytext::newline;
 				}
 			ret+=type_text+name+"_end="+easytext::to_string(start_index+array_size-1)+";";
+			start_index+=array_size;
+		}
+		return ret;
+	}
+
+	// sample:
+	// inline double& voltage()
+	// { 
+	// 	return data(3);
+	// }
+	// sample:
+	// inline subvector_type angles()
+	// {
+	// 	return data.subvec(4,6);
+	// }
+	std::string to_subvector_functions(uint &start_index)
+	{
+		std::string ret;
+		if(array_size==1)
+		{
+			ret+="inline double "+name+"() const\n{\n\treturn data("+easytext::to_string(start_index)+");\n}\n";
+			ret+="inline double& "+name+"()\n{\n\treturn data("+easytext::to_string(start_index)+");\n}\n";
+			start_index++;
+		}
+		else
+		{
+			ret+="inline const subvector_type "+name+"() const\n{\n\treturn data.subvec("+easytext::to_string(start_index)+","+easytext::to_string(start_index+array_size-1)+");\n}\n";
+			ret+="inline subvector_type "+name+"()\n{\n\treturn data.subvec("+easytext::to_string(start_index)+","+easytext::to_string(start_index+array_size-1)+");\n}\n";
 			start_index+=array_size;
 		}
 		return ret;

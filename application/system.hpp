@@ -8,7 +8,7 @@ class CSystem: public CSystem_Base
 {
 protected:
 	time_type last_observed_time;
-	intermediate_type last_observed_intermediates;
+	mids_type last_observed_intermediates;
 
 public:
 
@@ -24,34 +24,34 @@ public:
 		// constructor
 	}
 
-	void observer(const state_type &x, const double &t,const double &next_dt)
+	void observer(const states_type &x, const double &t,const double &next_dt)
 	{
-		input_type u;
+		inputs_type u;
 		next_sudden_change_time=Model::input(t,u);
 		observer_type ymat;
 		Model::observer(x,t,ymat,last_observed_intermediates,last_observed_time,u);
 		results_push(t,next_dt,ymat);
-		intermediate_type new_mids;
+		mids_type new_mids;
 		Model::intermediates(u,x,new_mids,t,last_observed_intermediates,last_observed_time);
 		last_observed_time=t;
 		last_observed_intermediates=new_mids;
 	}
 
-	void rhs(const state_type &x, state_type &dxdt, const double t)
+	void rhs(const states_type &x, states_type &dxdt, const double t)
 	{
-		input_type u;
+		inputs_type u;
 		next_sudden_change_time=Model::input(t,u);
 		Model::rhs(x,dxdt,t,last_observed_intermediates,last_observed_time,u);
 	}
 
-	double timer(const state_type &x, const double t)
+	double timer(const states_type &x, const double t)
 	{
 		_unused(x);
 		return t+10000;
 	}
 
 	size_t integrate_adaptive(
-			state_type &start_state,
+			states_type &start_state,
 			const time_type start_time,
 			const time_type end_time,
 			const time_type dt_init)

@@ -6,8 +6,13 @@
 
 #pragma once
 
-namespace mids
+class mids_type
 {
+public:
+
+	// total size of mid vector
+	static const uint mids_size=12;
+
 	// m[0]	surge_input_acc_ref
 	// m[1]	surge_hp_out
 	// m[2]	surge_kin_acc
@@ -21,19 +26,250 @@ namespace mids
 	// m[10]	tilt_force
 	// m[11]	specific_force
 
-	const uint surge_input_acc_ref=0;
-	const uint surge_hp_out=1;
-	const uint surge_kin_acc=2;
-	const uint surge_kin_vel=3;
-	const uint surge_kin_pos=4;
-	const uint surge_lp_out=5;
-	const uint tilt_coordination=6;
-	const uint pitch_input_angle_ref=7;
-	const uint pitch_hp_out=8;
-	const uint pitch_angle=9;
-	const uint tilt_force=10;
-	const uint specific_force=11;
+	const uint index_surge_input_acc_ref=0;
+	const uint index_surge_hp_out=1;
+	const uint index_surge_kin_acc=2;
+	const uint index_surge_kin_vel=3;
+	const uint index_surge_kin_pos=4;
+	const uint index_surge_lp_out=5;
+	const uint index_tilt_coordination=6;
+	const uint index_pitch_input_angle_ref=7;
+	const uint index_pitch_hp_out=8;
+	const uint index_pitch_angle=9;
+	const uint index_tilt_force=10;
+	const uint index_specific_force=11;
 
-	// total size of mids vector
-	const int intermediate_size=12;
+	typedef arma::vec::fixed<mids_size> vector_type;
+	typedef arma::subview_col<double> subvector_type;
+	vector_type data;
+
+	mids_type()
+	{}
+
+	mids_type(vector_type data): data(data)
+	{}
+
+	inline const vector_type operator() () const
+	{
+		return data;
+	}
+	inline vector_type operator() ()
+	{
+		return data;
+	}
+
+	inline double operator() (const arma::uword n) const
+	{
+		return data(n);
+	}
+	inline double& operator() (const arma::uword n)
+	{
+		return data(n);
+	}
+
+	inline const subvector_type subvec(const arma::uword n,const arma::uword m) const
+	{
+		return data.subvec(n,m);
+	}
+	inline subvector_type subvec(const arma::uword n,const arma::uword m)
+	{
+		return data.subvec(n,m);
+	}
+
+	mids_type operator= (const mids_type other)
+	{
+		data=other.data;
+		return *this;
+	}
+
+	mids_type operator= (const vector_type other_data)
+	{
+		data=other_data;
+		return *this;
+	}
+
+	inline vector_type zeros()
+	{
+		return data.zeros();
+	}
+
+	// inline const vector_type operator*= (const double val)
+	// {
+	// 	return (data=val*data);
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return data*val;
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return val*data;
+	// }
+
+	// ****************************
+	// total size of mid vector
+
+	inline double surge_input_acc_ref() const
+	{
+	return data(0);
+	}
+	inline double& surge_input_acc_ref()
+	{
+	return data(0);
+	}
+	
+	inline double surge_hp_out() const
+	{
+	return data(1);
+	}
+	inline double& surge_hp_out()
+	{
+	return data(1);
+	}
+	
+	inline double surge_kin_acc() const
+	{
+	return data(2);
+	}
+	inline double& surge_kin_acc()
+	{
+	return data(2);
+	}
+	
+	inline double surge_kin_vel() const
+	{
+	return data(3);
+	}
+	inline double& surge_kin_vel()
+	{
+	return data(3);
+	}
+	
+	inline double surge_kin_pos() const
+	{
+	return data(4);
+	}
+	inline double& surge_kin_pos()
+	{
+	return data(4);
+	}
+	
+	inline double surge_lp_out() const
+	{
+	return data(5);
+	}
+	inline double& surge_lp_out()
+	{
+	return data(5);
+	}
+	
+	inline double tilt_coordination() const
+	{
+	return data(6);
+	}
+	inline double& tilt_coordination()
+	{
+	return data(6);
+	}
+	
+	inline double pitch_input_angle_ref() const
+	{
+	return data(7);
+	}
+	inline double& pitch_input_angle_ref()
+	{
+	return data(7);
+	}
+	
+	inline double pitch_hp_out() const
+	{
+	return data(8);
+	}
+	inline double& pitch_hp_out()
+	{
+	return data(8);
+	}
+	
+	inline double pitch_angle() const
+	{
+	return data(9);
+	}
+	inline double& pitch_angle()
+	{
+	return data(9);
+	}
+	
+	inline double tilt_force() const
+	{
+	return data(10);
+	}
+	inline double& tilt_force()
+	{
+	return data(10);
+	}
+	
+	inline double specific_force() const
+	{
+	return data(11);
+	}
+	inline double& specific_force()
+	{
+	return data(11);
+	}
+	
+};
+
+inline mids_type::vector_type operator* (double scalar, mids_type vec)
+{
+	return scalar * vec.data;
+}
+
+inline mids_type::vector_type operator* (mids_type vec,double scalar)
+{
+	return vec.data * scalar;
+}
+
+inline mids_type::vector_type operator+ (double scalar, mids_type vec)
+{
+	return scalar + vec.data;
+}
+
+inline mids_type::vector_type operator+ (mids_type vec,double scalar)
+{
+	return vec.data + scalar;
+}
+
+inline mids_type::vector_type operator+ (mids_type vec1,mids_type vec2)
+{
+	return vec1.data + vec2.data;
+}
+
+inline mids_type::vector_type operator- (double scalar, mids_type vec)
+{
+	return scalar - vec.data;
+}
+
+inline mids_type::vector_type operator- (mids_type vec,double scalar)
+{
+	return vec.data - scalar;
+}
+
+inline mids_type::vector_type operator- (mids_type vec1,mids_type vec2)
+{
+	return vec1.data - vec2.data;
+}
+
+namespace arma
+{
+	inline mids_type::vector_type abs(mids_type vec)
+	{
+		return arma::abs(vec.data);
+	}
+
+	inline double max(mids_type vec)
+	{
+		return arma::max(vec.data);
+	}
 }

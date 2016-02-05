@@ -6,8 +6,13 @@
 
 #pragma once
 
-namespace states
+class states_type
 {
+public:
+
+	// total size of state vector
+	static const uint states_size=7;
+
 	// x[0]	surge_hp_x1
 	// x[1]	surge_hp_x2
 	// x[2]	surge_kin_vel
@@ -16,14 +21,200 @@ namespace states
 	// x[5]	surge_lp_x2
 	// x[6]	pitch_hp_x1
 
-	const uint surge_hp_x1=0;
-	const uint surge_hp_x2=1;
-	const uint surge_kin_vel=2;
-	const uint surge_kin_pos=3;
-	const uint surge_lp_x1=4;
-	const uint surge_lp_x2=5;
-	const uint pitch_hp_x1=6;
+	const uint index_surge_hp_x1=0;
+	const uint index_surge_hp_x2=1;
+	const uint index_surge_kin_vel=2;
+	const uint index_surge_kin_pos=3;
+	const uint index_surge_lp_x1=4;
+	const uint index_surge_lp_x2=5;
+	const uint index_pitch_hp_x1=6;
 
-	// total size of states vector
-	const int state_size=7;
+	typedef arma::vec::fixed<states_size> vector_type;
+	typedef arma::subview_col<double> subvector_type;
+	vector_type data;
+
+	states_type()
+	{}
+
+	states_type(vector_type data): data(data)
+	{}
+
+	inline const vector_type operator() () const
+	{
+		return data;
+	}
+	inline vector_type operator() ()
+	{
+		return data;
+	}
+
+	inline double operator() (const arma::uword n) const
+	{
+		return data(n);
+	}
+	inline double& operator() (const arma::uword n)
+	{
+		return data(n);
+	}
+
+	inline const subvector_type subvec(const arma::uword n,const arma::uword m) const
+	{
+		return data.subvec(n,m);
+	}
+	inline subvector_type subvec(const arma::uword n,const arma::uword m)
+	{
+		return data.subvec(n,m);
+	}
+
+	states_type operator= (const states_type other)
+	{
+		data=other.data;
+		return *this;
+	}
+
+	states_type operator= (const vector_type other_data)
+	{
+		data=other_data;
+		return *this;
+	}
+
+	inline vector_type zeros()
+	{
+		return data.zeros();
+	}
+
+	// inline const vector_type operator*= (const double val)
+	// {
+	// 	return (data=val*data);
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return data*val;
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return val*data;
+	// }
+
+	// ****************************
+	// total size of state vector
+
+	inline double surge_hp_x1() const
+	{
+	return data(0);
+	}
+	inline double& surge_hp_x1()
+	{
+	return data(0);
+	}
+	
+	inline double surge_hp_x2() const
+	{
+	return data(1);
+	}
+	inline double& surge_hp_x2()
+	{
+	return data(1);
+	}
+	
+	inline double surge_kin_vel() const
+	{
+	return data(2);
+	}
+	inline double& surge_kin_vel()
+	{
+	return data(2);
+	}
+	
+	inline double surge_kin_pos() const
+	{
+	return data(3);
+	}
+	inline double& surge_kin_pos()
+	{
+	return data(3);
+	}
+	
+	inline double surge_lp_x1() const
+	{
+	return data(4);
+	}
+	inline double& surge_lp_x1()
+	{
+	return data(4);
+	}
+	
+	inline double surge_lp_x2() const
+	{
+	return data(5);
+	}
+	inline double& surge_lp_x2()
+	{
+	return data(5);
+	}
+	
+	inline double pitch_hp_x1() const
+	{
+	return data(6);
+	}
+	inline double& pitch_hp_x1()
+	{
+	return data(6);
+	}
+	
+};
+
+inline states_type::vector_type operator* (double scalar, states_type vec)
+{
+	return scalar * vec.data;
+}
+
+inline states_type::vector_type operator* (states_type vec,double scalar)
+{
+	return vec.data * scalar;
+}
+
+inline states_type::vector_type operator+ (double scalar, states_type vec)
+{
+	return scalar + vec.data;
+}
+
+inline states_type::vector_type operator+ (states_type vec,double scalar)
+{
+	return vec.data + scalar;
+}
+
+inline states_type::vector_type operator+ (states_type vec1,states_type vec2)
+{
+	return vec1.data + vec2.data;
+}
+
+inline states_type::vector_type operator- (double scalar, states_type vec)
+{
+	return scalar - vec.data;
+}
+
+inline states_type::vector_type operator- (states_type vec,double scalar)
+{
+	return vec.data - scalar;
+}
+
+inline states_type::vector_type operator- (states_type vec1,states_type vec2)
+{
+	return vec1.data - vec2.data;
+}
+
+namespace arma
+{
+	inline states_type::vector_type abs(states_type vec)
+	{
+		return arma::abs(vec.data);
+	}
+
+	inline double max(states_type vec)
+	{
+		return arma::max(vec.data);
+	}
 }

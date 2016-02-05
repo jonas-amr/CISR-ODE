@@ -8,4 +8,4 @@
 
 // include models
 
-#include "../../app_models/transmission_line/model.hpp"
+#include "../../app_models/classical_washoutfilter/model.hpp"

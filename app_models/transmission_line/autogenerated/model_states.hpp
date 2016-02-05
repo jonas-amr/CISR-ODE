@@ -6,16 +6,162 @@
 
 #pragma once
 
-namespace states
+class states_type
 {
+public:
+
+	// total size of state vector
+	static const uint states_size=200;
+
 	// x[0:99]	q[100]
 	// x[100:199]	phi[100]
 
-	const uint q_0=0;
-	const uint q_end=99;
-	const uint phi_0=100;
-	const uint phi_end=199;
+	const uint index_q_0=0;
+	const uint index_q_end=99;
+	const uint index_phi_0=100;
+	const uint index_phi_end=199;
 
-	// total size of states vector
-	const int state_size=200;
+	typedef arma::vec::fixed<states_size> vector_type;
+	typedef arma::subview_col<double> subvector_type;
+	vector_type data;
+
+	states_type()
+	{}
+
+	states_type(vector_type data): data(data)
+	{}
+
+	inline const vector_type operator() () const
+	{
+		return data;
+	}
+	inline vector_type operator() ()
+	{
+		return data;
+	}
+
+	inline double operator() (const arma::uword n) const
+	{
+		return data(n);
+	}
+	inline double& operator() (const arma::uword n)
+	{
+		return data(n);
+	}
+
+	inline const subvector_type subvec(const arma::uword n,const arma::uword m) const
+	{
+		return data.subvec(n,m);
+	}
+	inline subvector_type subvec(const arma::uword n,const arma::uword m)
+	{
+		return data.subvec(n,m);
+	}
+
+	states_type operator= (const states_type other)
+	{
+		data=other.data;
+		return *this;
+	}
+
+	states_type operator= (const vector_type other_data)
+	{
+		data=other_data;
+		return *this;
+	}
+
+	inline vector_type zeros()
+	{
+		return data.zeros();
+	}
+
+	// inline const vector_type operator*= (const double val)
+	// {
+	// 	return (data=val*data);
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return data*val;
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return val*data;
+	// }
+
+	// ****************************
+	// total size of state vector
+
+	inline const subvector_type q() const
+	{
+	return data.subvec(0,99);
+	}
+	inline subvector_type q()
+	{
+	return data.subvec(0,99);
+	}
+	
+	inline const subvector_type phi() const
+	{
+	return data.subvec(100,199);
+	}
+	inline subvector_type phi()
+	{
+	return data.subvec(100,199);
+	}
+	
+};
+
+inline states_type::vector_type operator* (double scalar, states_type vec)
+{
+	return scalar * vec.data;
+}
+
+inline states_type::vector_type operator* (states_type vec,double scalar)
+{
+	return vec.data * scalar;
+}
+
+inline states_type::vector_type operator+ (double scalar, states_type vec)
+{
+	return scalar + vec.data;
+}
+
+inline states_type::vector_type operator+ (states_type vec,double scalar)
+{
+	return vec.data + scalar;
+}
+
+inline states_type::vector_type operator+ (states_type vec1,states_type vec2)
+{
+	return vec1.data + vec2.data;
+}
+
+inline states_type::vector_type operator- (double scalar, states_type vec)
+{
+	return scalar - vec.data;
+}
+
+inline states_type::vector_type operator- (states_type vec,double scalar)
+{
+	return vec.data - scalar;
+}
+
+inline states_type::vector_type operator- (states_type vec1,states_type vec2)
+{
+	return vec1.data - vec2.data;
+}
+
+namespace arma
+{
+	inline states_type::vector_type abs(states_type vec)
+	{
+		return arma::abs(vec.data);
+	}
+
+	inline double max(states_type vec)
+	{
+		return arma::max(vec.data);
+	}
 }

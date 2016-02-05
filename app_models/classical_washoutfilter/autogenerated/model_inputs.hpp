@@ -6,14 +6,160 @@
 
 #pragma once
 
-namespace inputs
+class inputs_type
 {
+public:
+
+	// total size of input vector
+	static const uint inputs_size=2;
+
 	// u[0]	surge_acc
 	// u[1]	pitch_angle
 
-	const uint surge_acc=0;
-	const uint pitch_angle=1;
+	const uint index_surge_acc=0;
+	const uint index_pitch_angle=1;
 
-	// total size of inputs vector
-	const int input_size=2;
+	typedef arma::vec::fixed<inputs_size> vector_type;
+	typedef arma::subview_col<double> subvector_type;
+	vector_type data;
+
+	inputs_type()
+	{}
+
+	inputs_type(vector_type data): data(data)
+	{}
+
+	inline const vector_type operator() () const
+	{
+		return data;
+	}
+	inline vector_type operator() ()
+	{
+		return data;
+	}
+
+	inline double operator() (const arma::uword n) const
+	{
+		return data(n);
+	}
+	inline double& operator() (const arma::uword n)
+	{
+		return data(n);
+	}
+
+	inline const subvector_type subvec(const arma::uword n,const arma::uword m) const
+	{
+		return data.subvec(n,m);
+	}
+	inline subvector_type subvec(const arma::uword n,const arma::uword m)
+	{
+		return data.subvec(n,m);
+	}
+
+	inputs_type operator= (const inputs_type other)
+	{
+		data=other.data;
+		return *this;
+	}
+
+	inputs_type operator= (const vector_type other_data)
+	{
+		data=other_data;
+		return *this;
+	}
+
+	inline vector_type zeros()
+	{
+		return data.zeros();
+	}
+
+	// inline const vector_type operator*= (const double val)
+	// {
+	// 	return (data=val*data);
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return data*val;
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return val*data;
+	// }
+
+	// ****************************
+	// total size of input vector
+
+	inline double surge_acc() const
+	{
+	return data(0);
+	}
+	inline double& surge_acc()
+	{
+	return data(0);
+	}
+	
+	inline double pitch_angle() const
+	{
+	return data(1);
+	}
+	inline double& pitch_angle()
+	{
+	return data(1);
+	}
+	
+};
+
+inline inputs_type::vector_type operator* (double scalar, inputs_type vec)
+{
+	return scalar * vec.data;
+}
+
+inline inputs_type::vector_type operator* (inputs_type vec,double scalar)
+{
+	return vec.data * scalar;
+}
+
+inline inputs_type::vector_type operator+ (double scalar, inputs_type vec)
+{
+	return scalar + vec.data;
+}
+
+inline inputs_type::vector_type operator+ (inputs_type vec,double scalar)
+{
+	return vec.data + scalar;
+}
+
+inline inputs_type::vector_type operator+ (inputs_type vec1,inputs_type vec2)
+{
+	return vec1.data + vec2.data;
+}
+
+inline inputs_type::vector_type operator- (double scalar, inputs_type vec)
+{
+	return scalar - vec.data;
+}
+
+inline inputs_type::vector_type operator- (inputs_type vec,double scalar)
+{
+	return vec.data - scalar;
+}
+
+inline inputs_type::vector_type operator- (inputs_type vec1,inputs_type vec2)
+{
+	return vec1.data - vec2.data;
+}
+
+namespace arma
+{
+	inline inputs_type::vector_type abs(inputs_type vec)
+	{
+		return arma::abs(vec.data);
+	}
+
+	inline double max(inputs_type vec)
+	{
+		return arma::max(vec.data);
+	}
 }

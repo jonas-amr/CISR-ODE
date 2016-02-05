@@ -2,12 +2,12 @@
 #include "model.hpp"
 
 void Model::intermediates(
-	const input_type			&u,
-	const state_type			&x,
-	intermediate_type			&mid,
-	const time_type 			&t,
-	const intermediate_type		&last_observed_mids,
-	const time_type				&last_observed_t
+	const inputs_type	&u,
+	const states_type	&x,
+	mids_type			&mid,
+	const time_type 	&t,
+	const mids_type		&last_observed_mids,
+	const time_type		&last_observed_t
 	)
 {
 	_unused(t);
@@ -18,6 +18,6 @@ void Model::intermediates(
 	// m[0]	v_in
 	// m[1]	v_end
 
-	mid(mids::v_in)=u(inputs::v_in);
-	mid(mids::v_end)=x(states::q_end)/physics::C;
+	mid.v_in()=u.v_in();
+	mid.v_end()=x(x.index_q_end)/physics::C;
 }

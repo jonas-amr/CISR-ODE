@@ -7,15 +7,15 @@
 #pragma once
 
 void Model::observer(
-	const state_type 			&x ,
-	const double 				&t,
-	observer_type 				&ymat,
-	const intermediate_type 	&last_observed_mids,
-	const time_type 			&last_observed_t,
-	input_type					&u
+	const states_type 	&x ,
+	const double 		&t,
+	observer_type 		&ymat,
+	const mids_type 	&last_observed_mids,
+	const time_type 	&last_observed_t,
+	inputs_type			&u
 	)
 {
-	intermediate_type mid;
+	mids_type mid;
 	intermediates(u,x,mid,t,last_observed_mids,last_observed_t);
 
 	// y0	theta_desired[0];
@@ -29,9 +29,9 @@ void Model::observer(
 	// y8	position[2];
 	// y9	error;
 
-	ymat.subvec(outputs::theta_desired_0,outputs::theta_desired_2)=mid.subvec(mids::theta_desired_0,mids::theta_desired_end);
-	ymat.subvec(outputs::theta_0,outputs::theta_2)=mid.subvec(mids::theta_0,mids::theta_end);
-	ymat.subvec(outputs::position_0,outputs::position_2)=mid.subvec(mids::position_0,mids::position_end);
-	ymat(outputs::error)=mid(mids::error);
+	ymat.subvec(outputs::theta_desired_0,outputs::theta_desired_2)=mid.subvec(mid.index_theta_desired_0,mid.index_theta_desired_end);
+	ymat.subvec(outputs::theta_0,outputs::theta_2)=mid.subvec(mid.index_theta_0,mid.index_theta_end);
+	ymat.subvec(outputs::position_0,outputs::position_2)=mid.subvec(mid.index_position_0,mid.index_position_end);
+	ymat(outputs::error)=mid(mid.index_error);
 
 }

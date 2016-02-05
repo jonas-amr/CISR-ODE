@@ -14,8 +14,8 @@ public:
 	typedef Model::deriv_type deriv_type;
 	typedef Model::observer_type observer_type;
 	typedef Model::buffer_type buffer_type;
-	typedef Model::input_type input_type;
-	typedef Model::intermediate_type intermediate_type;
+	// typedef Model::input_type input_type;
+	// typedef Model::intermediate_type intermediate_type;
 	// typedef std::make_signed<decltype(results.n_rows)>::type result_row_index_type;
 
 protected:
@@ -31,7 +31,7 @@ public:
 		Reset();
 		filesystem::ensure_folder(files::output_folder);
 		uint out_header_size=std::extent<decltype(outputs::output_header)>::value;
-		if(out_header_size!=outputs::output_size)
+		if(out_header_size!=outputs::outputs_size)
 			throw std::runtime_error("output header size mismatch!");
 	}
 

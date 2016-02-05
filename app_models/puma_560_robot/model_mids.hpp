@@ -4,12 +4,12 @@
 using namespace arma;
 
 void Model::intermediates(
-	const input_type			&u,
-	const state_type			&x,
-	intermediate_type			&mid,
-	const time_type 			&t,
-	const intermediate_type		&last_observed_mids,
-	const time_type				&last_observed_t
+	const inputs_type	&u,
+	const states_type	&x,
+	mids_type			&mid,
+	const time_type 	&t,
+	const mids_type		&last_observed_mids,
+	const time_type		&last_observed_t
 	)
 {
 	// m[0:2]	theta_desired[3]
@@ -26,40 +26,36 @@ void Model::intermediates(
 	// m[42:44]	position_desired[3]
 	// m[45]	error
 
-	mid.subvec(mids::theta_desired_0,mids::theta_desired_end)=u;
-	mid.subvec(mids::D_theta_desired_0,mids::D_theta_desired_end)=Model::derivative_range3(mid,last_observed_mids,mids::theta_desired_0,mids::theta_desired_end,t,last_observed_t);
-	mid.subvec(mids::DD_theta_desired_0,mids::DD_theta_desired_end)=Model::derivative_range3(mid,last_observed_mids,mids::D_theta_desired_0,mids::D_theta_desired_end,t,last_observed_t);
-	mid.subvec(mids::theta_0,mids::theta_end)=x.subvec(states::theta_pos_0,states::theta_pos_end);
-	mid.subvec(mids::D_theta_0,mids::D_theta_end)=x.subvec(states::theta_vel_0,states::theta_vel_end);
+	mid.theta_desired()=u();
+	mid.D_theta_desired()=Model::derivative_range3(mid.theta_desired(),last_observed_mids.theta_desired(),t,last_observed_t);
+	mid.DD_theta_desired()=Model::derivative_range3(mid.D_theta_desired(),last_observed_mids.D_theta_desired(),t,last_observed_t);
+	mid.theta()=x.theta_pos();
+	mid.D_theta()=x.theta_vel();
 
 	// ********** CTC Control law **********
-	mid.subvec(mids::theta_error_0,mids::theta_error_end)=mid.subvec(mids::theta_desired_0,mids::theta_desired_end)-mid.subvec(mids::theta_0,mids::theta_end);
-	// mid.subvec(mids::D_theta_error_0,mids::D_theta_error_end)=(mid.subvec(mids::theta_error_0,mids::theta_error_end)-last_observed_mids.subvec(mids::theta_error_0,mids::theta_error_end))/(t-last_observed_t);
-	mid.subvec(mids::D_theta_error_0,mids::D_theta_error_end)=Model::derivative_range3(mid,last_observed_mids,mids::theta_error_0,mids::theta_error_end,t,last_observed_t);
+	mid.theta_error()=mid.theta_desired()-mid.theta();
+	mid.D_theta_error()=Model::derivative_range3(mid.theta_error(),last_observed_mids.theta_error(),t,last_observed_t);
 
-	mid.subvec(mids::DD_theta_controller_0,mids::DD_theta_controller_2)=mid.subvec(mids::DD_theta_desired_0,mids::DD_theta_desired_end)+15.0*mid.subvec(mids::theta_error_0,mids::theta_error_end)+10.0*mid.subvec(mids::D_theta_error_0,mids::D_theta_error_end);
-	mid.subvec(mids::DD_theta_controller_3,mids::DD_theta_controller_end).zeros();//={0,0,0};
+	mid.DD_theta_controller().subvec(0,2)=mid.DD_theta_desired()+15.0*mid.theta_error()+10.0*mid.D_theta_error();
+	mid.DD_theta_controller().subvec(3,5).zeros();//={0,0,0};
 
-	const double theta2=mid(mids::theta_1);
-	const double theta3=mid(mids::theta_2);
+	const double theta2=mid.theta()(1);
+	const double theta3=mid.theta()(2);
 	const arma::mat Inertia_mat=Model::kinetic_energy_mat(theta2,theta3);
 
 	Model::coriolis_type B=Model::coriolis_mat(theta2,theta3);
 	arma::mat C=Model::centrifugal_mat(theta2,theta3);
 	arma::mat G=Model::gravity_mat(theta2,theta3);
 
-	mid.subvec(mids::T_0,mids::T_end)=Model::to_T_vec(Inertia_mat,mid.subvec(mids::DD_theta_controller_0,mids::DD_theta_controller_end),B,C,G,mid.subvec(mids::D_theta_0,mids::D_theta_end));
+	mid.T()=Model::to_T_vec(Inertia_mat,mid.DD_theta_controller(),B,C,G,mid.D_theta());
 
 	// // ddtheta=....
 
 	// // ********** 3-link Puma robot **********
-	mid.subvec(mids::angular_vec_0,mids::angular_vec_end)=arma::solve(Inertia_mat, Model::to_angular_vec(mid.subvec(mids::T_0,mids::T_end),B,C,G,mid.subvec(mids::D_theta_0,mids::D_theta_end)));
-	mid.subvec(mids::position_0,mids::position_end)=Model::angle_to_position(mid.subvec(mids::theta_0,mids::theta_end));
-	mid.subvec(mids::position_desired_0,mids::position_desired_end)=Model::angle_to_position(mid.subvec(mids::theta_desired_0,mids::theta_desired_end));
-// _(mid(mids::position_0));
-// _(mid(mids::position_end));
-// _(mid(mids::position_desired_0));
-// _(mid(mids::position_desired_end));
-	mid(mids::error)=arma::norm(mid.subvec(mids::position_0,mids::position_end)-mid.subvec(mids::position_desired_0,mids::position_desired_end));
+	mid.angular_vec()=arma::solve(Inertia_mat, Model::to_angular_vec(mid.T(),B,C,G,mid.D_theta()));
+	mid.position()=Model::angle_to_position(mid.theta());
+	mid.position_desired()=Model::angle_to_position(mid.theta_desired());
+
+	mid.error()=arma::norm(mid.position()-mid.position_desired());
 
 }

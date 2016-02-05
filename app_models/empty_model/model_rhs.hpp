@@ -2,16 +2,16 @@
 #include "model.hpp"
 
 void Model::rhs(
-	const state_type 			&x,
-	state_type 					&x_dot,
-	const time_type				&t,
-	const intermediate_type 	&last_observed_mids,
-	const time_type 			&last_observed_t,
-	input_type					&u
+	const states_type 	&x,
+	states_type 		&x_dot,
+	const time_type		&t,
+	const mids_type 	&last_observed_mids,
+	const time_type 	&last_observed_t,
+	inputs_type			&u
 	)
 {
 	// ******* system implementation *******
-	intermediate_type mid;
+	mids_type mid;
 	intermediates(u,x,mid,t,last_observed_mids,last_observed_t);
 
 	_unused(t);

@@ -6,15 +6,152 @@
 
 #pragma once
 
-namespace inputs
+class inputs_type
 {
+public:
+
+	// total size of input vector
+	static const uint inputs_size=3;
+
 	// u[0:2]	theta_acc_ref[3]
 
-	const uint theta_acc_ref_0=0;
-	const uint theta_acc_ref_1=1;
-	const uint theta_acc_ref_2=2;
-	const uint theta_acc_ref_end=2;
+	const uint index_theta_acc_ref_0=0;
+	const uint index_theta_acc_ref_1=1;
+	const uint index_theta_acc_ref_2=2;
+	const uint index_theta_acc_ref_end=2;
 
-	// total size of inputs vector
-	const int input_size=3;
+	typedef arma::vec::fixed<inputs_size> vector_type;
+	typedef arma::subview_col<double> subvector_type;
+	vector_type data;
+
+	inputs_type()
+	{}
+
+	inputs_type(vector_type data): data(data)
+	{}
+
+	inline const vector_type operator() () const
+	{
+		return data;
+	}
+	inline vector_type operator() ()
+	{
+		return data;
+	}
+
+	inline double operator() (const arma::uword n) const
+	{
+		return data(n);
+	}
+	inline double& operator() (const arma::uword n)
+	{
+		return data(n);
+	}
+
+	inline const subvector_type subvec(const arma::uword n,const arma::uword m) const
+	{
+		return data.subvec(n,m);
+	}
+	inline subvector_type subvec(const arma::uword n,const arma::uword m)
+	{
+		return data.subvec(n,m);
+	}
+
+	inputs_type operator= (const inputs_type other)
+	{
+		data=other.data;
+		return *this;
+	}
+
+	inputs_type operator= (const vector_type other_data)
+	{
+		data=other_data;
+		return *this;
+	}
+
+	inline vector_type zeros()
+	{
+		return data.zeros();
+	}
+
+	// inline const vector_type operator*= (const double val)
+	// {
+	// 	return (data=val*data);
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return data*val;
+	// }
+
+	// inline const vector_type operator* (const double val) const
+	// {
+	// 	return val*data;
+	// }
+
+	// ****************************
+	// total size of input vector
+
+	inline const subvector_type theta_acc_ref() const
+	{
+	return data.subvec(0,2);
+	}
+	inline subvector_type theta_acc_ref()
+	{
+	return data.subvec(0,2);
+	}
+	
+};
+
+inline inputs_type::vector_type operator* (double scalar, inputs_type vec)
+{
+	return scalar * vec.data;
+}
+
+inline inputs_type::vector_type operator* (inputs_type vec,double scalar)
+{
+	return vec.data * scalar;
+}
+
+inline inputs_type::vector_type operator+ (double scalar, inputs_type vec)
+{
+	return scalar + vec.data;
+}
+
+inline inputs_type::vector_type operator+ (inputs_type vec,double scalar)
+{
+	return vec.data + scalar;
+}
+
+inline inputs_type::vector_type operator+ (inputs_type vec1,inputs_type vec2)
+{
+	return vec1.data + vec2.data;
+}
+
+inline inputs_type::vector_type operator- (double scalar, inputs_type vec)
+{
+	return scalar - vec.data;
+}
+
+inline inputs_type::vector_type operator- (inputs_type vec,double scalar)
+{
+	return vec.data - scalar;
+}
+
+inline inputs_type::vector_type operator- (inputs_type vec1,inputs_type vec2)
+{
+	return vec1.data - vec2.data;
+}
+
+namespace arma
+{
+	inline inputs_type::vector_type abs(inputs_type vec)
+	{
+		return arma::abs(vec.data);
+	}
+
+	inline double max(inputs_type vec)
+	{
+		return arma::max(vec.data);
+	}
 }

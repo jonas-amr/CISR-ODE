@@ -15,24 +15,24 @@ namespace easytext
 	const std::string newline("\n");
 
 	std::string replace_once(std::string text,
-						std::string tofind,
-						std::string toreplace)
+						std::string to_find,
+						std::string to_replace)
 	{
-		size_t found_pos = text.find(tofind);
+		size_t found_pos = text.find(to_find);
 		if(found_pos == std::string::npos)
 			return(text);
-		return text.replace(found_pos,tofind.length(),toreplace);
+		return text.replace(found_pos,to_find.length(),to_replace);
 	}
 
 	std::string replace_all(std::string text,
-						std::string tofind,
-						std::string toreplace)
+						std::string to_find,
+						std::string to_replace)
 	{
-		size_t found_pos;
+		std::size_t found_pos;
 		std::string result=text;
-		while((found_pos = text.find(tofind))!=std::string::npos)
+		while((found_pos = result.find(to_find))!=std::string::npos)
 		{
-			result=result.replace(found_pos,tofind.length(),toreplace);
+			result=result.replace(found_pos,to_find.length(),to_replace);
 		}
 		return result;
 	}

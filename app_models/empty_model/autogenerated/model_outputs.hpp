@@ -8,7 +8,7 @@
 
 namespace outputs
 {
-	const std::string output_header[]={
+	std::string output_header[]={
 		
 	};
 
@@ -16,15 +16,17 @@ namespace outputs
 
 	
 
-	// total size of outputs vector
-	const int output_size=0;
+	// ****************************
+	// total size of output vector
+
+	const int outputs_size=0;
 	
 	//Export list
-	struct FigureList
+	const struct FigureList
 	{
 		std::string file_suffix; // no space is accepted in file suffix name
 		int output_index;
 	} figure_list[]={
 		
 	};
-}
+};

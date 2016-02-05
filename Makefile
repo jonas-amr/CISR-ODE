@@ -69,8 +69,8 @@ ifeq ($(shell expr $(GCC_MAJOR).$(GCC_MINOR) '>=' 4.9),1)
     CXXFLAGS +=-fdiagnostics-color=always
     CXXTestFLAGS +=-fdiagnostics-color=always
 endif
-CXXFLAGS_RELEASE := -O3 -s -DNDEBUG  -DARMA_NO_DEBUG
-CXXFLAGS_DEBUG := -g
+CXXFLAGS_RELEASE := -O3 -s -DNDEBUG -DARMA_NO_DEBUG
+CXXFLAGS_DEBUG := -g -O3
 
 #CXXFLAGS+= --cover
 LIBS:= -lboost_filesystem -lboost_system -lcrypto -lrt -lboost_regex -lboost_wave -larmadillo

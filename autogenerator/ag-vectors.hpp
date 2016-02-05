@@ -211,6 +211,27 @@ public:
 	}
 
 	// sample:
+	// inline double& voltage()
+	// { 
+	// 	return data(3);
+	// }
+	// inline subvector_type angles()
+	// {
+	// 	return data.subvec(4,6);
+	// }
+	std::string subvector_functions()
+	{
+		std::string ret;
+		uint start_index=0;
+		for(auto item : aglist)
+		{
+			ret+=(start_index?easytext::newline:"");
+			ret+=item.to_subvector_functions(start_index);
+		}
+		return ret;		
+	}
+
+	// sample:
 	// const int surge_hp_x1=0;
 	// const int surge_hp_x2=1;
 	// const int surge_kin_vel=2;
@@ -225,7 +246,6 @@ public:
 		}
 		return ret;		
 	}
-
 	// sample:
 	// const int surge_input_acc_ref=0;
 	// const int surge_hp_out=1;

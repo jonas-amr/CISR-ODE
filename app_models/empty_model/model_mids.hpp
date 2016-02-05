@@ -2,12 +2,12 @@
 #include "model.hpp"
 
 void Model::intermediates(
-	const input_type			&u,
-	const state_type			&x,
-	intermediate_type			&mid,
-	const time_type 			&t,
-	const intermediate_type		&last_observed_mids,
-	const time_type				&last_observed_t
+	const inputs_type	&u,
+	const states_type	&x,
+	mids_type			&mid,
+	const time_type 	&t,
+	const mids_type		&last_observed_mids,
+	const time_type		&last_observed_t
 	)
 {
 	_unused(t);

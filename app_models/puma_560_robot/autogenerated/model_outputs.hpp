@@ -8,7 +8,7 @@
 
 namespace outputs
 {
-	const std::string output_header[]={
+	std::string output_header[]={
 		"theta_desired[0]",
 		"theta_desired[1]",
 		"theta_desired[2]",
@@ -43,11 +43,13 @@ namespace outputs
 	const uint position_2=8;
 	const uint error=9;
 
-	// total size of outputs vector
-	const int output_size=10;
+	// ****************************
+	// total size of output vector
+
+	const int outputs_size=10;
 	
 	//Export list
-	struct FigureList
+	const struct FigureList
 	{
 		std::string file_suffix; // no space is accepted in file suffix name
 		int output_index;
@@ -63,4 +65,4 @@ namespace outputs
 		{"position[2]",outputs::position_2},
 		{"error",outputs::error}
 	};
-}
+};

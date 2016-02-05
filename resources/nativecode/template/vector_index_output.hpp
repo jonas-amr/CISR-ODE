@@ -5,9 +5,9 @@
 
 #pragma once
 
-namespace #TITLE#
+namespace #TITLES#
 {
-	const std::string output_header[]={
+	std::string output_header[]={
 		#OUTPUTHEADER#
 	};
 
@@ -15,15 +15,17 @@ namespace #TITLE#
 
 	#INDEX_CONSTANTS#
 
+	// ****************************
 	// total size of #TITLE# vector
-	const int #TOTAL_SIZE#;
+
+	const int #TITLES#_size=#TOTAL_SIZE#;
 	
 	//Export list
-	struct FigureList
+	const struct FigureList
 	{
 		std::string file_suffix; // no space is accepted in file suffix name
 		int output_index;
 	} figure_list[]={
 		#FIGURE_LIST#
 	};
-}
+};
